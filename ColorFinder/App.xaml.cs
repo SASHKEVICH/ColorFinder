@@ -17,12 +17,12 @@ namespace ColorFinder
     {
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.Register<Services.IUploadService, Services.ImageUploadService>();
         }
 
         protected override Window CreateShell()
         {
-            var window = Container.Resolve<MainWindow>();
+            var window = Container.Resolve<Views.MainWindow>();
             return window;
         }
     }

@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Prism.Mvvm;
 
-namespace ColorFinder
+namespace ColorFinder.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
