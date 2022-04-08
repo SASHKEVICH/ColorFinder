@@ -20,7 +20,7 @@
         
         <Image Grid.Row="0" Source="{Binding MainImage}"/>
         
-        <Grid Grid.Row="1" ShowGridLines="True" Margin="0 5 0 5">
+        <Grid Grid.Row="1" Margin="0 5 0 5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="0.1*"/>
@@ -29,9 +29,9 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             
-            <Rectangle Grid.Column="0" Fill="Gray"/>
-            <Rectangle Grid.Column="2" Fill="Gray"/>
-            <Rectangle Grid.Column="4" Fill="Gray"/>
+            <Rectangle Grid.Column="0" Fill="{Binding Brush1}" Visibility="Visible"/>
+            <Rectangle Grid.Column="2" Fill="{Binding Brush2}"/>
+            <Rectangle Grid.Column="4" Fill="{Binding Brush3}"/>
         </Grid>
         
         <Grid Grid.Row="2" VerticalAlignment="Bottom">
