@@ -11,27 +11,35 @@ namespace  ColorFinder.Models
         /// <summary>
         /// Создание к-среднего кластера.
         /// </summary>
-        /// <param name="initClusterCenter">Стартовый центр кластера.</param>
+        /// <param name="initClusterCenter">Стартовый центр (цвет) кластера.</param>
         public KCluster(Color initClusterCenter)
         {
             ClusterCenter = initClusterCenter;
             _clusterColors = new List<Color>();
         }
         
-        public Color ClusterCenter { get; set; }
-        private List<Color> _clusterColors;
-        private double _accuracy = 0.01;
+        public Color ClusterCenter { get; private set; }
+        private readonly List<Color> _clusterColors;
+        private const double Accuracy = 0.01;
         
+        /// <summary>
+        /// Добавить цвет в список цветов этого кластера.
+        /// </summary>
+        /// <param name="color"></param>
         public void AddColor(Color color)
         {
             _clusterColors.Add(color);
         }
-
+        
+        /// <summary>
+        /// Метод вычисляет, достигнута ли точность вычислений, и, соответсвенно, нужно ли прекращать пересчет центров.
+        /// </summary>
+        /// <returns></returns>
         public bool IsItEnoughForRecalcultaions()
         {
             var range = RecalculateCenter();
 
-            if (range > _accuracy) return false;
+            if (range > Accuracy) return false;
             
             return true;
         }

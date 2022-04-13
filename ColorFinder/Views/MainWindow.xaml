@@ -8,7 +8,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         Title="ColorFinder" Height="450" Width="800">
-    <Grid ShowGridLines="True" Margin="25">
+    <Grid Margin="25">
         <Grid.RowDefinitions>
             <RowDefinition Height="70*"/>
             <RowDefinition Height="15*"/>

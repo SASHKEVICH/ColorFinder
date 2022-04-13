@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace ColorFinder.Models
 {
-    public class ColorCounter
+    public class ColorCalculator
     {
         private Bitmap _resizedImage;
         private List<Color> _dominantColors;
@@ -33,7 +34,7 @@ namespace ColorFinder.Models
         {
             using var originalImage = Image.FromFile(imageFileName);
             Size newSize;
-            const int maxResizedDimension = 300;
+            const int maxResizedDimension = 150;
 
             if (originalImage.Height > originalImage.Width)
             {

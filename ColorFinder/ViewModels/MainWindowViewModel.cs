@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Media;
 using ColorFinder.Models;
 using ColorFinder.Services;
@@ -15,7 +14,7 @@ namespace ColorFinder.ViewModels
         public MainWindowViewModel()
         {
             _imageUpload = new ImageUploadService();
-            _colorCounter = new ColorCounter();
+            _colorCounter = new ColorCalculator();
             ImageUploadCommand = new DelegateCommand(ImageUploadCommandExecute);
             
             var standardColor = Color.FromArgb(100, 196, 196, 196);
@@ -28,12 +27,12 @@ namespace ColorFinder.ViewModels
         public DelegateCommand ImageUploadCommand { get; }
         
         private readonly ImageUploadService _imageUpload;
-        private readonly ColorCounter _colorCounter;
-        private string _mainImage;
+        private readonly ColorCalculator _colorCounter;
+        private string _mainImage = "";
 
-        private Brush _brush1;
-        private Brush _brush2;
-        private Brush _brush3;
+        private Brush? _brush1;
+        private Brush? _brush2;
+        private Brush? _brush3;
         
         public Brush Brush1
         {
@@ -58,16 +57,16 @@ namespace ColorFinder.ViewModels
             set => SetProperty(ref _mainImage, value);
         }
         
-        private void ImageUploadCommandExecute()
+        private async void ImageUploadCommandExecute()
         {
             MainImage = _imageUpload.GetImageFileName();
 
             var mediaColors = new List<Color>();
-            var dominantColors = _colorCounter.GetDominantColors(MainImage);
+            var dominantColors = await _colorCounter.GetDominantColors(MainImage);
 
             foreach (var color in dominantColors)
             {
-                mediaColors.Add(System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B));
+                mediaColors.Add(Color.FromArgb(color.A, color.R, color.G, color.B));
             }
             
             Brush1 = new SolidColorBrush(mediaColors[0]);

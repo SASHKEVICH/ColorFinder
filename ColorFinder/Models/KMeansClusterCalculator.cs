@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace ColorFinder.Models
 {
     public class KMeansClusterCalculator
     {
+        public KMeansClusterCalculator(List<Color> imageColors)
+        {
+            _kClusters = new List<KCluster>();
+            _imageColors = imageColors;
+        }
+        
         private const int ClustersAmount = 3;
         private readonly List<Color> _imageColors;
         private List<KCluster> _kClusters;
@@ -19,7 +26,7 @@ namespace ColorFinder.Models
         public List<KCluster> FindClustersCentres()
         {
             SetupClusters();
-            DoCentersRecalclulations();
+            await DoCentersRecalclulations();
 
             return _kClusters;
         }
@@ -35,7 +42,6 @@ namespace ColorFinder.Models
             
             while (i < ClustersAmount)
             {
-                // Исправить проверку на одинаковые цвета, занося уже выбранные цвета в список
                 var randomColorNumber = rnd.Next(_imageColors.Count);
                 var randomColor = _imageColors[randomColorNumber];
 
@@ -57,20 +63,24 @@ namespace ColorFinder.Models
         private async Task DoCentersRecalclulations()
         {
             var iterations = 0;
-            while (iterations < 25)
+
+            await Task.Run(() =>
             {
-                FillClustersByColors();
+                while (iterations < 25)
+                { 
+                    FillClustersByColors();
 
-                foreach (var cluster in _kClusters)
-                {
-                    if (cluster.IsItEnoughForRecalcultaions())
+                    foreach (var cluster in _kClusters)
                     {
-                        break;
+                        if (cluster.IsItEnoughForRecalcultaions())
+                        {
+                            break;
+                        }
                     }
-                }
 
-                iterations++;
-            }
+                    iterations++;
+                }
+            });
         }
         
         /// <summary>
@@ -81,17 +91,16 @@ namespace ColorFinder.Models
             foreach (var color in _imageColors)
             {
                 var shortedDistance = double.MaxValue;
-                KCluster? closestCluster = null;
+                var closestCluster = new KCluster(new Color());
 
                 foreach (var cluster in _kClusters)
                 {
                     var distance = cluster.EuclidianRangeFromCenter(color);
 
-                    if (distance < shortedDistance)
-                    {
-                        shortedDistance = distance;
-                        closestCluster = cluster;
-                    }
+                    if (distance >= shortedDistance) continue;
+                    
+                    shortedDistance = distance;
+                    closestCluster = cluster;
                 }
                     
                 closestCluster.AddColor(color);
