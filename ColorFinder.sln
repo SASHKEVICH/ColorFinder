@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorFinder", "ColorFinder\ColorFinder.csproj", "{809192CA-98BF-4B61-A423-10DC8D96AC08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorFinderTests", "ColorFinderTests\ColorFinderTests.csproj", "{C58927F8-94C4-419F-A62A-952DB680876F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{809192CA-98BF-4B61-A423-10DC8D96AC08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{809192CA-98BF-4B61-A423-10DC8D96AC08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{809192CA-98BF-4B61-A423-10DC8D96AC08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C58927F8-94C4-419F-A62A-952DB680876F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C58927F8-94C4-419F-A62A-952DB680876F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C58927F8-94C4-419F-A62A-952DB680876F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C58927F8-94C4-419F-A62A-952DB680876F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -25,7 +25,7 @@ namespace ColorFinder.Models
         }
 
         /// <summary>
-        /// Сжимает изображение до разрешения, у которого одно из измерений строго 300 пикселей, сохраняя пропорции.
+        /// Сжимает изображение до разрешения, у которого одно из измерений строго 150 пикселей, сохраняя пропорции.
         /// </summary>
         /// <param name="imageFileName">Имя файла с изображением.</param>
         /// <returns>Сжатое изображение.</returns>
@@ -51,6 +51,10 @@ namespace ColorFinder.Models
             return resizedImage;
         }
         
+        /// <summary>
+        /// Добавляет цвета из изображения в список.
+        /// </summary>
+        /// <returns>Список цветов (Color).</returns>
         private List<Color> AddColorsFromImageToList()
         {
             var imageColors = new List<Color>(_resizedImage.Width * _resizedImage.Height);

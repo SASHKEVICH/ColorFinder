@@ -23,7 +23,10 @@ namespace ColorFinder.Models
 
             return _kClusters;
         }
-
+        
+        /// <summary>
+        /// Рандомный выбор цвета, как центра кластера на изображении. 
+        /// </summary>
         private void SetupClusters()
         {
             var alreadyPickedColors = new List<Color>();
@@ -48,7 +51,10 @@ namespace ColorFinder.Models
             }
         }
         
-        private void DoCentersRecalclulations()
+        /// <summary>
+        /// Смещение центров кластеров к средним цветам.
+        /// </summary>
+        private async Task DoCentersRecalclulations()
         {
             var iterations = 0;
             while (iterations < 25)
@@ -66,7 +72,10 @@ namespace ColorFinder.Models
                 iterations++;
             }
         }
-
+        
+        /// <summary>
+        /// Заполнение кластеров ближайшими для них цветами.
+        /// </summary>
         private void FillClustersByColors()
         {
             foreach (var color in _imageColors)
