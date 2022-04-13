@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Media;
 using Color = System.Drawing.Color;
 
-namespace  ColorFinder.Models
+namespace ColorFinder.Models.KMeans
 {
     public class KCluster
     {

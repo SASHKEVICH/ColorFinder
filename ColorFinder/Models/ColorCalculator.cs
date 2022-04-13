@@ -2,25 +2,31 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using ColorFinder.Models.KMeans;
 
 namespace ColorFinder.Models
 {
     public class ColorCalculator
     {
-        private Bitmap _resizedImage;
-        private List<Color> _dominantColors;
-        public List<Color> GetDominantColors(string imageFileName)
+        private Bitmap _resizedImage = new (100, 100);
+        private List<Color> _dominantColors = new ();
+        private IColorCalculator? _colorCalculator;
+
+        /// <summary>
+        /// Находит доминантые цвета на изображении.
+        /// </summary>
+        /// <param name="imageFileName">Путь до изображения.</param>
+        /// <returns>Список цветов (Colors).</returns>
+        public async Task<List<Color>> GetDominantColors(string imageFileName)
         { 
             _resizedImage = ResizeImage(imageFileName);
             _dominantColors = new List<Color>();
             
             var imageColors = AddColorsFromImageToList();
 
-            var clusterCaclulator = new KMeansClusterCalculator(imageColors);
+            _colorCalculator = new KMeansClusterCalculator(imageColors);
 
-            var clustersCentres = clusterCaclulator.FindClustersCentres();
-
-            clustersCentres.ForEach(cluster => _dominantColors.Add(cluster.ClusterCenter));
+            _dominantColors = await _colorCalculator.GetDominantColors();
             
             return _dominantColors;
         }

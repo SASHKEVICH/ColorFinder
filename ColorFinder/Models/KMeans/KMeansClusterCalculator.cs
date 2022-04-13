@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace ColorFinder.Models
+namespace ColorFinder.Models.KMeans
 {
-    public class KMeansClusterCalculator
+    public class KMeansClusterCalculator : IColorCalculator
     {
         public KMeansClusterCalculator(List<Color> imageColors)
         {
@@ -15,20 +15,26 @@ namespace ColorFinder.Models
         
         private const int ClustersAmount = 3;
         private readonly List<Color> _imageColors;
-        private List<KCluster> _kClusters;
+        private readonly List<KCluster> _kClusters;
 
-        public KMeansClusterCalculator(List<Color> imageColors)
+        public async Task<List<Color>> GetDominantColors()
         {
-            _kClusters = new List<KCluster>();
-            _imageColors = imageColors;
+            await FindClusters();
+
+            var dominantColors = new List<Color>();
+            _kClusters.ForEach(cluster => dominantColors.Add(cluster.ClusterCenter));
+
+            return dominantColors;
         }
         
-        public List<KCluster> FindClustersCentres()
+        /// <summary>
+        /// Шаблонный метод поиск центров кластеров.
+        /// </summary>
+        /// <returns>Список к-средних кластеров.</returns>
+        private async Task FindClusters()
         {
             SetupClusters();
             await DoCentersRecalclulations();
-
-            return _kClusters;
         }
         
         /// <summary>
