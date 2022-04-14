@@ -11,5 +11,19 @@ namespace ColorFinder.Views
         {
             InitializeComponent();
         }
+        private void MinimizeWindowOnClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+        
+        private void MaximizeWindowOnClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Maximized;
+        }
+        
+        private void CloseWindowOnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

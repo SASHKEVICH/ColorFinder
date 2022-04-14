@@ -8,8 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Views\icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="Prism.Unity" Version="8.1.97" />
       <PackageReference Include="System.Drawing.Common" Version="7.0.0-preview.1.22076.8" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Views\icon.ico" />
     </ItemGroup>
 
 </Project>

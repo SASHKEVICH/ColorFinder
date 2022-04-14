@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Media;
 using ColorFinder.Models;
 using ColorFinder.Services;
@@ -11,20 +12,52 @@ namespace ColorFinder.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
+        #region Constructor
         public MainWindowViewModel()
         {
             _imageUpload = new ImageUploadService();
             _colorCounter = new ColorCalculator();
             ImageUploadCommand = new DelegateCommand(ImageUploadCommandExecute);
-            
+
             var standardColor = Color.FromArgb(100, 196, 196, 196);
             
             Brush1 = new SolidColorBrush(standardColor);
             Brush2 = new SolidColorBrush(standardColor);
             Brush3 = new SolidColorBrush(standardColor);
         }
+        #endregion
 
+        #region Commands
         public DelegateCommand ImageUploadCommand { get; }
+
+        private async void ImageUploadCommandExecute()
+        {
+            MainImage = _imageUpload.GetImageFileName();
+            if (MainImage == "")
+            {
+                return;
+            }
+            
+            var mediaColors = new List<Color>();
+            var dominantColors = await _colorCounter.GetDominantColors(MainImage);
+
+            foreach (var color in dominantColors)
+            {
+                mediaColors.Add(Color.FromArgb(color.A, color.R, color.G, color.B));
+            }
+            
+            Brush1 = new SolidColorBrush(mediaColors[0]);
+            Brush2 = new SolidColorBrush(mediaColors[1]);
+            Brush3 = new SolidColorBrush(mediaColors[2]);
+        }
+
+        #endregion
+
+        #region PrivateFields
+
+        private Window _window; 
+        private int _outerMarginSize = 5;
+        private int _windowRadius = 5;
         
         private readonly ImageUploadService _imageUpload;
         private readonly ColorCalculator _colorCounter;
@@ -33,7 +66,11 @@ namespace ColorFinder.ViewModels
         private Brush? _brush1;
         private Brush? _brush2;
         private Brush? _brush3;
-        
+
+        #endregion
+
+        #region PublicProperties
+
         public Brush Brush1
         {
             get => _brush1;
@@ -57,21 +94,23 @@ namespace ColorFinder.ViewModels
             set => SetProperty(ref _mainImage, value);
         }
         
-        private async void ImageUploadCommandExecute()
+        public int OuterMarginSize
         {
-            MainImage = _imageUpload.GetImageFileName();
-
-            var mediaColors = new List<Color>();
-            var dominantColors = await _colorCounter.GetDominantColors(MainImage);
-
-            foreach (var color in dominantColors)
-            {
-                mediaColors.Add(Color.FromArgb(color.A, color.R, color.G, color.B));
-            }
-            
-            Brush1 = new SolidColorBrush(mediaColors[0]);
-            Brush2 = new SolidColorBrush(mediaColors[1]);
-            Brush3 = new SolidColorBrush(mediaColors[2]);
+            get => _outerMarginSize;
+            set => _outerMarginSize = value;
         }
+
+        public int WindowRadius
+        {
+            get => _windowRadius;
+            set => _windowRadius = value;
+        }
+        public Thickness OuterMarginSizeThickness => new (OuterMarginSize);
+        public CornerRadius WindowCornerRadius => new(WindowRadius);
+
+        public SolidColorBrush ForegroundLightBrush => new (Color.FromRgb(255, 255, 255));
+
+        #endregion
+
     }
 }

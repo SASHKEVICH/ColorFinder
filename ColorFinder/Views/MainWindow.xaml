@@ -4,84 +4,236 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
-        xmlns:local="clr-namespace:ColorFinder"
+        xmlns:views="clr-namespace:ColorFinder.Views"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="ColorFinder" Height="450" Width="800">
-    <Grid Margin="25">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="70*"/>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="15*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="70*"/>
-        </Grid.ColumnDefinitions>
+        x:Name="MyWindow"
+        Title="ColorFinder" 
+        Height="580" 
+        Width="978"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Views/icon.ico">
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}" x:Key="WindowControlButton">
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Foreground" Value="#686868"/>
+            
+            <Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1.3"/>
+                </Setter.Value>
+            </Setter>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{TemplateBinding Content}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#efefef"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         
-        <Grid Grid.Column="0">
-            <Grid Margin="0 5 0 0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="1.5*"/>
-                </Grid.RowDefinitions>
-                
-                <ComboBox Grid.Row="0" Height="25" Width="50" VerticalAlignment="Top" HorizontalAlignment="Left">
-                    
-                </ComboBox>
-                
-                <Grid Grid.Row="1">
-                    <Rectangle 
-                            Margin="0 5 5 50"
-                            Fill="{Binding Brush1}" 
-                            Height="45"
-                            VerticalAlignment="Top"
-                            Stroke="DarkGray"/>
-                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
-                </Grid>
-                <Grid Grid.Row="2">
-                    <Rectangle 
-                        Margin="0 5 5 50" 
-                        Fill="{Binding Brush2}"
-                        Height="45"
-                        VerticalAlignment="Top"
-                        Stroke="DarkGray"/>
-                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
-                </Grid>
-                <Grid Grid.Row="3">
-                    <Rectangle 
-                        Margin="0 5 5 50" 
-                        Fill="{Binding Brush3}"
-                        Height="45"
-                        VerticalAlignment="Top"
-                        Stroke="DarkGray"/>
-                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
-                </Grid>
-                
-                <Button Grid.Row="4"
-                    Margin="0 55 5 0"
-                    Command="{Binding ImageUploadCommand}"
-                    BorderBrush="Gray"
-                >
-                    Загрузить фото
-                </Button>
-            </Grid>
-        </Grid>
+        <Style TargetType="{x:Type Button}" x:Key="WindowCloseButton" BasedOn="{StaticResource WindowControlButton}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Tomato" />
+                    <Setter Property="Foreground" Value="{Binding ForegroundLightBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         
-        <Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="0.5" Fill="Black"/>
-        
-        <Grid Grid.Column="2" ShowGridLines="True">
-            <Image Source="{Binding MainImage}" Margin="0 0 0 25"/>
-            <TextBlock 
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Right"
-                Margin="0 0 5 0">
-                Бекренев Александр, 2022 год.
-            </TextBlock>
-        </Grid>
-    </Grid>
+        <Style TargetType="{x:Type views:MainWindow}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Window}">
+                        <Border Padding="{Binding OuterMarginSizeThickness, FallbackValue=10}">
+                            <Grid>
+                                <Border x:Name="Container"
+                                        Background="#efefef"
+                                        CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}">
+                                    
+                                </Border>
+                                
+                                <!-- Эффект тени для границы окна -->
+                                <Border CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}" 
+                                        Background="{Binding ForegroundLightBrush, FallbackValue=White}">
+                                    <Border.Effect>
+                                        <DropShadowEffect ShadowDepth="15" Opacity="0.1"/>
+                                    </Border.Effect>
+                                </Border>
+                                
+                                <!-- Main-Window Markup -->
+                                <Grid>
+                                    <Grid.OpacityMask>
+                                        <VisualBrush Visual="{Binding ElementName=Container}"/>
+                                    </Grid.OpacityMask>
+                                    
+                                    <Grid.RowDefinitions>
+                                        <!-- Title-bar -->
+                                        <RowDefinition Height="32"/>
+                                        <!-- Drop-shadow -->
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <!-- Title-bar -->
+                                    <Grid Grid.Row="0" Panel.ZIndex="1">
+                                        <Grid.ColumnDefinitions>
+                                            <!-- Icon -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- Title -->
+                                            <ColumnDefinition Width="*"/>
+                                            <!-- Windows-buttons -->
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <!-- Icon -->
+                                        <Image Grid.Column="0"
+                                               WindowChrome.IsHitTestVisibleInChrome="True"
+                                               Source="/Views/icon.ico"
+                                        />
+                                        
+                                        <!-- Title -->
+                                        <TextBlock 
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                            ColorFinder
+                                        </TextBlock>
+                                        
+                                        <!-- Windows-buttons -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Button 
+                                                Style="{StaticResource WindowControlButton}" 
+                                                Content="_"
+                                                Click="MinimizeWindowOnClick"/>
+                                            <Button 
+                                                Style="{StaticResource WindowControlButton}" 
+                                                Content="[ ]"
+                                                Click="MaximizeWindowOnClick"/>
+                                            <Button
+                                                Style="{StaticResource WindowCloseButton}" 
+                                                Content="X"
+                                                Click="CloseWindowOnClick"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    
+                                    <Border Grid.Row="1" Height="6" BorderThickness="0 0.2 0 0">
+                                        <Border.BorderBrush>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#ffffff" Offset="0.0" />
+                                                <GradientStop Color="#686868" Offset="0.5" />
+                                                <GradientStop Color="#ffffff" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Border.BorderBrush>
+                                    </Border>
+                                    
+                                    <!-- Main-part -->
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="70*"/>
+                                        </Grid.ColumnDefinitions>
+                                    
+                                        <Grid Grid.Column="0">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="1.5*"/>
+                                                    <RowDefinition Height="1.5*"/>
+                                                    <RowDefinition Height="1.5*"/>
+                                                    <RowDefinition Height="1.5*"/>
+                                                </Grid.RowDefinitions>
+                                                
+                                                <ComboBox 
+                                                    Grid.Row="0" 
+                                                    Height="25" 
+                                                    Width="50" 
+                                                    VerticalAlignment="Top" 
+                                                    HorizontalAlignment="Left">
+                                                    
+                                                </ComboBox>
+                                                
+                                                <Grid Grid.Row="1">
+                                                    <Rectangle 
+                                                            Margin="0 5 5 50"
+                                                            Fill="{Binding Brush1}" 
+                                                            Height="45"
+                                                            VerticalAlignment="Top"
+                                                            Stroke="DarkGray"/>
+                                                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
+                                                </Grid>
+                                                <Grid Grid.Row="2">
+                                                    <Rectangle 
+                                                        Margin="0 5 5 50" 
+                                                        Fill="{Binding Brush2}"
+                                                        Height="45"
+                                                        VerticalAlignment="Top"
+                                                        Stroke="DarkGray"/>
+                                                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
+                                                </Grid>
+                                                <Grid Grid.Row="3">
+                                                    <Rectangle 
+                                                        Margin="0 5 5 50" 
+                                                        Fill="{Binding Brush3}"
+                                                        Height="45"
+                                                        VerticalAlignment="Top"
+                                                        Stroke="DarkGray"/>
+                                                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
+                                                </Grid>
+                                                
+                                                <Button Grid.Row="4"
+                                                    Margin="0 55 5 0"
+                                                    Command="{Binding ImageUploadCommand}"
+                                                    BorderBrush="Gray"
+                                                >
+                                                    Загрузить фото
+                                                </Button>
+                                            </Grid>
+                                        </Grid>
+                                        
+                                        <Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="0.5" Fill="Black"/>
+                                        
+                                        <Grid Grid.Column="2" ShowGridLines="True">
+                                            <Image Source="{Binding MainImage}" Margin="0 0 0 25"/>
+                                            <TextBlock
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Right"
+                                                Margin="0 0 5 0">
+                                                Бекренев Александр, 2022 год.
+                                            </TextBlock>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome     
+            CaptionHeight="32"  
+            CornerRadius ="0"
+            ResizeBorderThickness="4"         
+            GlassFrameThickness="0">
+        </WindowChrome>
+    </WindowChrome.WindowChrome>
+    
 </Window>
