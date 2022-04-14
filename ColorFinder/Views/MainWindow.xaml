@@ -15,40 +15,73 @@
             <RowDefinition Height="15*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="70*"/>
         </Grid.ColumnDefinitions>
         
-        <Image Grid.Row="0" Source="{Binding MainImage}"/>
-        
-        <Grid Grid.Row="1" Margin="0 5 0 5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="0.1*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="0.1*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            
-            <Rectangle Grid.Column="0" Fill="{Binding Brush1}" Visibility="Visible"/>
-            <Rectangle Grid.Column="2" Fill="{Binding Brush2}"/>
-            <Rectangle Grid.Column="4" Fill="{Binding Brush3}"/>
+        <Grid Grid.Column="0">
+            <Grid Margin="0 5 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="1.5*"/>
+                </Grid.RowDefinitions>
+                
+                <ComboBox Grid.Row="0" Height="25" Width="50" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    
+                </ComboBox>
+                
+                <Grid Grid.Row="1">
+                    <Rectangle 
+                            Margin="0 5 5 50"
+                            Fill="{Binding Brush1}" 
+                            Height="45"
+                            VerticalAlignment="Top"
+                            Stroke="DarkGray"/>
+                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Rectangle 
+                        Margin="0 5 5 50" 
+                        Fill="{Binding Brush2}"
+                        Height="45"
+                        VerticalAlignment="Top"
+                        Stroke="DarkGray"/>
+                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Rectangle 
+                        Margin="0 5 5 50" 
+                        Fill="{Binding Brush3}"
+                        Height="45"
+                        VerticalAlignment="Top"
+                        Stroke="DarkGray"/>
+                    <TextBlock Margin="20 65 0 0">Test</TextBlock>
+                </Grid>
+                
+                <Button Grid.Row="4"
+                    Margin="0 55 5 0"
+                    Command="{Binding ImageUploadCommand}"
+                    BorderBrush="Gray"
+                >
+                    Загрузить фото
+                </Button>
+            </Grid>
         </Grid>
         
-        <Grid Grid.Row="2" VerticalAlignment="Bottom">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="7*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            
-            <TextBlock Grid.Column="0" VerticalAlignment="Bottom">Бекренев Александр, 2022 год.</TextBlock>
-            <Button 
-                Grid.Column="2" 
-                Padding="5 10"
-                Command="{Binding ImageUploadCommand}"
-            >
-                Загрузить фото
-            </Button>
+        <Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="0.5" Fill="Black"/>
+        
+        <Grid Grid.Column="2" ShowGridLines="True">
+            <Image Source="{Binding MainImage}" Margin="0 0 0 25"/>
+            <TextBlock 
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Margin="0 0 5 0">
+                Бекренев Александр, 2022 год.
+            </TextBlock>
         </Grid>
     </Grid>
 </Window>
