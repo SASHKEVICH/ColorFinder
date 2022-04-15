@@ -69,8 +69,8 @@ namespace ColorFinder.ViewModels
 
         #region PrivateFields
 
-        private List<System.Drawing.Color> _dominantColors;
-        private List<Color> _mediaColors;
+        private List<System.Drawing.Color>? _dominantColors;
+        private List<Color>? _mediaColors;
         
         private int _outerMarginSize = 10;
         private int _windowRadius = 10;
@@ -87,8 +87,8 @@ namespace ColorFinder.ViewModels
         private string _colorInterpretation2 = "";
         private string _colorInterpretation3 = "";
 
-        private Brush _titleBarBrush;
-        private Brush _titleBarTextBrush = new SolidColorBrush(Color.FromRgb(104, 104, 104));
+        private Brush? _titleBarBrush;
+        private Brush? _titleBarTextBrush = new SolidColorBrush(Color.FromRgb(104, 104, 104));
 
         private string _interpretation;
 
@@ -98,19 +98,19 @@ namespace ColorFinder.ViewModels
 
         public Brush Color1
         {
-            get => _color1;
+            get => _color1 ?? new SolidColorBrush();
             set => SetProperty(ref _color1, value);
         }
         
         public Brush Color2
         {
-            get => _color2;
+            get => _color2 ?? new SolidColorBrush();
             set => SetProperty(ref _color2, value);
         }
         
         public Brush Color3
         {
-            get => _color3;
+            get => _color3 ?? new SolidColorBrush();
             set => SetProperty(ref _color3, value);
         }
 
@@ -150,13 +150,13 @@ namespace ColorFinder.ViewModels
         
         public Brush TitleBarBrush
         {
-            get => _titleBarBrush;
+            get => _titleBarBrush ?? new SolidColorBrush();
             set => SetProperty(ref _titleBarBrush, value);
         }
         
         public Brush TitleBarTextBrush
         {
-            get => _titleBarTextBrush;
+            get => _titleBarTextBrush ?? new SolidColorBrush();
             set => SetProperty(ref _titleBarTextBrush, value);
         }
         
