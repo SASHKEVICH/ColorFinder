@@ -52,7 +52,7 @@ namespace ColorFinder.ViewModels
             Brush3 = new SolidColorBrush(mediaColors[2]);
 
             var random = new Random();
-            var randomDominantColor = random.Next(mediaColors.Count + 1);
+            var randomDominantColor = random.Next(mediaColors.Count);
 
             TitleBarBrush = new SolidColorBrush(mediaColors[randomDominantColor]);
         }
@@ -121,7 +121,6 @@ namespace ColorFinder.ViewModels
             get => _titleBarBrush;
             set => SetProperty(ref _titleBarBrush, value);
         }
-        
 
         #endregion
 
