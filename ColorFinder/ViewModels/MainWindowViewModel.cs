@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using ColorFinder.Models;
@@ -49,6 +50,11 @@ namespace ColorFinder.ViewModels
             Brush1 = new SolidColorBrush(mediaColors[0]);
             Brush2 = new SolidColorBrush(mediaColors[1]);
             Brush3 = new SolidColorBrush(mediaColors[2]);
+
+            var random = new Random();
+            var randomDominantColor = random.Next(mediaColors.Count + 1);
+
+            TitleBarBrush = new SolidColorBrush(mediaColors[randomDominantColor]);
         }
 
         #endregion
@@ -66,6 +72,8 @@ namespace ColorFinder.ViewModels
         private Brush? _brush1;
         private Brush? _brush2;
         private Brush? _brush3;
+
+        private Brush _titleBarBrush;
 
         #endregion
 
@@ -107,8 +115,13 @@ namespace ColorFinder.ViewModels
         }
         public Thickness OuterMarginSizeThickness => new (OuterMarginSize);
         public CornerRadius WindowCornerRadius => new(WindowRadius);
-
         public SolidColorBrush ForegroundLightBrush => new (Color.FromRgb(255, 255, 255));
+        public Brush TitleBarBrush
+        {
+            get => _titleBarBrush;
+            set => SetProperty(ref _titleBarBrush, value);
+        }
+        
 
         #endregion
 

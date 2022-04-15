@@ -90,7 +90,7 @@
                                     </Grid.RowDefinitions>
                                     
                                     <!-- Title-bar -->
-                                    <Grid Grid.Row="0" Panel.ZIndex="1">
+                                    <Grid Grid.Row="0" Panel.ZIndex="1" Background="{Binding TitleBarBrush}">
                                         <Grid.ColumnDefinitions>
                                             <!-- Icon -->
                                             <ColumnDefinition Width="Auto"/>
@@ -110,7 +110,10 @@
                                         <TextBlock 
                                             Grid.Column="1"
                                             HorizontalAlignment="Center"
-                                            VerticalAlignment="Center">
+                                            VerticalAlignment="Center"
+                                            FontFamily="Roboto"
+                                            FontSize="16"
+                                            Foreground="#7e7e7e">
                                             ColorFinder
                                         </TextBlock>
                                         
@@ -213,7 +216,10 @@
                                             <TextBlock
                                                 VerticalAlignment="Bottom"
                                                 HorizontalAlignment="Right"
-                                                Margin="0 0 5 0">
+                                                Margin="0 0 10 5"
+                                                FontFamily="Roboto"
+                                                FontSize="14"
+                                                Foreground="#7e7e7e">
                                                 Бекренев Александр, 2022 год.
                                             </TextBlock>
                                         </Grid>
@@ -232,7 +238,8 @@
             CaptionHeight="32"  
             CornerRadius ="0"
             ResizeBorderThickness="4"         
-            GlassFrameThickness="0">
+            GlassFrameThickness="0"
+            UseAeroCaptionButtons="False">
         </WindowChrome>
     </WindowChrome.WindowChrome>
     
