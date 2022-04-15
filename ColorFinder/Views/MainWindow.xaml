@@ -4,51 +4,422 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
-        xmlns:local="clr-namespace:ColorFinder"
+        xmlns:views="clr-namespace:ColorFinder.Views"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="ColorFinder" Height="450" Width="800">
-    <Grid Margin="25">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="70*"/>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="15*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <Image Grid.Row="0" Source="{Binding MainImage}"/>
-        
-        <Grid Grid.Row="1" Margin="0 5 0 5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="0.1*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="0.1*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
+        x:Name="MyWindow"
+        Title="ColorFinder" 
+        Height="580" 
+        Width="978"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Views/icon.ico">
+    <Window.Resources>
+        <!-- WindowControlButton Style -->
+        <Style TargetType="{x:Type Button}" x:Key="WindowControlButton">
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Foreground" Value="{Binding TitleBarTextBrush}"/>
             
-            <Rectangle Grid.Column="0" Fill="{Binding Brush1}" Visibility="Visible"/>
-            <Rectangle Grid.Column="2" Fill="{Binding Brush2}"/>
-            <Rectangle Grid.Column="4" Fill="{Binding Brush3}"/>
-        </Grid>
-        
-        <Grid Grid.Row="2" VerticalAlignment="Bottom">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="7*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
+            <Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1.3"/>
+                </Setter.Value>
+            </Setter>
             
-            <TextBlock Grid.Column="0" VerticalAlignment="Bottom">Бекренев Александр, 2022 год.</TextBlock>
-            <Button 
-                Grid.Column="2" 
-                Padding="5 10"
-                Command="{Binding ImageUploadCommand}"
-            >
-                Загрузить фото
-            </Button>
-        </Grid>
-    </Grid>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{TemplateBinding Content}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#efefef"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- WindowCloseButton Style -->
+        <Style TargetType="{x:Type Button}" x:Key="WindowCloseButton" BasedOn="{StaticResource WindowControlButton}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Tomato"/>
+                    <Setter Property="Foreground" Value="{Binding ForegroundLightBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- ColorInterpretationTextBox Style -->
+        <Style TargetType="{x:Type TextBox}" x:Key="ColorInterpretationTextBox">
+            <Setter Property="Margin" Value="10 40 5 0"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Background" Value="#f4f4f4"/>
+            <Setter Property="FontFamily" Value="Roboto"/>
+            <Setter Property="FontSize" Value="13"/>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate x:Name="TextBoxBaseControlTemplate" TargetType="{x:Type TextBoxBase}">
+                        <Border Background="{TemplateBinding Background}" 
+                                x:Name="Bd" BorderBrush="DarkGray"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5"> 
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter 
+                                    Property="Background" 
+                                    Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" 
+                                    TargetName="Bd"/>
+                                <Setter 
+                                    Property="Foreground" 
+                                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- ColorRectangle Style -->
+        <Style TargetType="{x:Type Rectangle}" x:Key="ColorRectangle">
+            <Setter Property="Margin" Value="0 5 5 25"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Stroke" Value="DarkGray"/>
+            <Setter Property="RadiusX" Value="10"/>
+            <Setter Property="RadiusY" Value="10"/>
+        </Style>
+        
+        <!-- ComboBoxTextBox Style -->
+        <Style x:Key="ComboBoxTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border CornerRadius="5,0,0,5"
+                                BorderThickness="1"
+                                Background="{TemplateBinding Background}"
+                                    BorderBrush="DarkGray">
+                                <ScrollViewer x:Name="PART_ContentHost"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- ComboBoxButton Style  -->
+        <Style x:Key="ComboBoxButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border 
+                            Background="#f4f4f4" 
+                            x:Name="border" 
+                            CornerRadius="0 5 5 0" 
+                            BorderThickness="0 1 1 1"
+                            BorderBrush="DarkGray">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- ComboBox Style -->
+        <Style TargetType="{x:Type ComboBox}" x:Key="ComboBoxStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition MaxWidth="18"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Name="PART_EditableTextBox"
+                                     Style="{StaticResource ComboBoxTextBoxStyle}"
+                                     Padding="5,0,0,0"
+                                     Height="{TemplateBinding Height}"
+                                     Background="#f4f4f4"
+                                     IsReadOnly="True"
+                                     Focusable="False"/>
+                            <ToggleButton Grid.Column="1" Margin="0"
+                                         Height="{TemplateBinding Height}"
+                                         Style="{StaticResource ComboBoxButtonStyle}"
+                                         Focusable="False"
+                                         IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                         ClickMode="Press">
+                                <Path Grid.Column="1"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Data="M 0 0 L 4 4 L 8 0 Z"
+                                      Fill="Gray" />
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left"
+                                          Margin="5,0,0,0"/>
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True" 
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      SnapsToDevicePixels="True"                
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border 
+                                        x:Name="DropDownBorder"
+                                        BorderThickness="1"
+                                        CornerRadius="5"
+                                        Background="#f4f4f4"
+                                        BorderBrush="DarkGray"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- RoundedButton Style -->
+        <Style TargetType="Button" x:Key="RoundedButton">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Margin" Value="0 5 5 1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" 
+                                BorderThickness="1"
+                                Padding="4,2" 
+                                BorderBrush="DarkGray" 
+                                CornerRadius="10" 
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="Black" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="{x:Type views:MainWindow}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Window}">
+                        <Border Padding="{Binding OuterMarginSizeThickness, FallbackValue=10}">
+                            <Grid>
+                                <Border x:Name="Container"
+                                        Background="#efefef"
+                                        CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}">
+                                </Border>
+                                
+                                <!-- Drop-down shadow effect -->
+                                <Border CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}" 
+                                        Background="{Binding ForegroundLightBrush, FallbackValue=White}">
+                                    <Border.Effect>
+                                        <DropShadowEffect ShadowDepth="15" Opacity="0.1"/>
+                                    </Border.Effect>
+                                </Border>
+                                
+                                <!-- Main-Window Markup -->
+                                <Grid Background="#F4F4F4">
+                                    <Grid.OpacityMask>
+                                        <VisualBrush Visual="{Binding ElementName=Container}"/>
+                                    </Grid.OpacityMask>
+                                    
+                                    <Grid.RowDefinitions>
+                                        <!-- Title-bar -->
+                                        <RowDefinition Height="32"/>
+                                        <!-- Drop-shadow -->
+                                        <RowDefinition Height="Auto"/>
+                                        <!-- Main-window -->
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <!-- Title-bar -->
+                                    <Grid Grid.Row="0" Panel.ZIndex="1" Background="{Binding TitleBarBrush}">
+                                        <Grid.ColumnDefinitions>
+                                            <!-- Icon -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- Title -->
+                                            <ColumnDefinition Width="*"/>
+                                            <!-- Windows-buttons -->
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <!-- Icon -->
+                                        <Image Grid.Column="0"
+                                               WindowChrome.IsHitTestVisibleInChrome="True"
+                                               Source="/Views/icon.ico"
+                                        />
+                                        
+                                        <!-- Title -->
+                                        <TextBlock 
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Roboto"
+                                            FontSize="16"
+                                            Foreground="{Binding TitleBarTextBrush}">
+                                            ColorFinder
+                                        </TextBlock>
+                                        
+                                        <!-- Windows-buttons -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Button 
+                                                Style="{StaticResource WindowControlButton}" 
+                                                Content="_"
+                                                Click="MinimizeWindowOnClick"/>
+                                            <Button 
+                                                Style="{StaticResource WindowControlButton}" 
+                                                Content="[ ]"
+                                                Click="MaximizeWindowOnClick"/>
+                                            <Button
+                                                Style="{StaticResource WindowCloseButton}" 
+                                                Content="X"
+                                                Click="CloseWindowOnClick"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    
+                                    <Border Grid.Row="1" Height="6" BorderThickness="0 0.2 0 0">
+                                        <Border.BorderBrush>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#ffffff" Offset="0.0" />
+                                                <GradientStop Color="#686868" Offset="0.5" />
+                                                <GradientStop Color="#ffffff" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Border.BorderBrush>
+                                    </Border>
+                                    
+                                    <!-- Main-part -->
+                                    <Grid Grid.Row="2" Margin="12 4 12 12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="70*"/>
+                                        </Grid.ColumnDefinitions>
+                                    
+                                        <Grid Grid.Column="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="0.5*"/>
+                                                <RowDefinition Height="1.5*"/>
+                                                <RowDefinition Height="1.5*"/>
+                                                <RowDefinition Height="1.5*"/>
+                                                <RowDefinition Height="1.5*"/>
+                                            </Grid.RowDefinitions>
+                                            
+                                            <ComboBox 
+                                                Grid.Row="0" 
+                                                Style="{StaticResource ComboBoxStyle}"
+                                                Height="25" 
+                                                Width="60" 
+                                                VerticalAlignment="Top" 
+                                                HorizontalAlignment="Left"
+                                                FontFamily="Roboto"
+                                                FontSize="13"
+                                                IsEditable="False"
+                                                ItemsSource="{Binding ColorInterpretations}"
+                                                SelectedValue="{Binding SelectedColorInterpretation, Mode=TwoWay}">
+                                            </ComboBox>
+                                            
+                                            <Grid Grid.Row="1">
+                                                <Rectangle 
+                                                    Style="{StaticResource ColorRectangle}"
+                                                    Fill="{Binding Color1}"/>
+                                                <TextBox 
+                                                    Style="{StaticResource ColorInterpretationTextBox}"
+                                                    Text="{Binding ColorInterpretation1}"/>
+                                            </Grid>
+                                            
+                                            <Grid Grid.Row="2">
+                                                <Rectangle 
+                                                    Style="{StaticResource ColorRectangle}"
+                                                    Fill="{Binding Color2}"/>
+                                                <TextBox 
+                                                    Style="{StaticResource ColorInterpretationTextBox}"
+                                                    Text="{Binding ColorInterpretation2}"/> 
+                                            </Grid>
+                                            
+                                            <Grid Grid.Row="3">
+                                                <Rectangle 
+                                                    Style="{StaticResource ColorRectangle}"
+                                                    Fill="{Binding Color3}"/>
+                                                <TextBox 
+                                                    Style="{StaticResource ColorInterpretationTextBox}"
+                                                    Text="{Binding ColorInterpretation3}"/>
+                                            </Grid>
+                                            
+                                            <Button
+                                                Grid.Row="4"
+                                                Style="{StaticResource RoundedButton}"
+                                                Height="45"
+                                                VerticalAlignment="Bottom"
+                                                Command="{Binding ImageUploadCommand}"
+                                                Background="{Binding TitleBarBrush}"
+                                                BorderBrush="DarkGray"
+                                                Content="Загрузить фото"
+                                                Foreground="#7e7e7e"
+                                                FontFamily="Roboto"
+                                                FontSize="13"
+                                            />
+                                        </Grid>
+                                        
+                                        <Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="0.5" Fill="Black"/>
+                                        
+                                        <Grid Grid.Column="2" ShowGridLines="True">
+                                            <Image Source="{Binding MainImage}" Margin="0 0 -1 25"/>
+                                            <TextBlock
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Right"
+                                                Margin="0 0 5 0"
+                                                FontFamily="Roboto"
+                                                FontSize="14"
+                                                Foreground="#7e7e7e">
+                                                Бекренев Александр, 2022 год.
+                                            </TextBlock>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome     
+            CaptionHeight="32"  
+            CornerRadius ="0"
+            ResizeBorderThickness="4"         
+            GlassFrameThickness="0"
+            UseAeroCaptionButtons="False">
+        </WindowChrome>
+    </WindowChrome.WindowChrome>
+    
 </Window>
