@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using ColorFinder.Models;
@@ -22,78 +23,84 @@ namespace ColorFinder.ViewModels
 
             var standardColor = Color.FromArgb(100, 196, 196, 196);
             
-            Brush1 = new SolidColorBrush(standardColor);
-            Brush2 = new SolidColorBrush(standardColor);
-            Brush3 = new SolidColorBrush(standardColor);
+            Color1 = new SolidColorBrush(standardColor);
+            Color2 = new SolidColorBrush(standardColor);
+            Color3 = new SolidColorBrush(standardColor);
+            
+            _interpretation = ColorInterpretations.First();
         }
         #endregion
 
         #region Commands
         public DelegateCommand ImageUploadCommand { get; }
-
         private async void ImageUploadCommandExecute()
         {
-            MainImage = _imageUpload.GetImageFileName();
-            if (MainImage == "")
+            var imageFilePath = _imageUpload.GetImageFileName();
+            if (imageFilePath == "")
             {
                 return;
             }
             
             var mediaColors = new List<Color>();
-            var dominantColors = await _colorCounter.GetDominantColors(MainImage);
+            var dominantColors = await _colorCounter.GetDominantColors(imageFilePath);
 
             foreach (var color in dominantColors)
             {
                 mediaColors.Add(Color.FromArgb(color.A, color.R, color.G, color.B));
             }
             
-            Brush1 = new SolidColorBrush(mediaColors[0]);
-            Brush2 = new SolidColorBrush(mediaColors[1]);
-            Brush3 = new SolidColorBrush(mediaColors[2]);
+            Color1 = new SolidColorBrush(mediaColors[0]);
+            Color2 = new SolidColorBrush(mediaColors[1]);
+            Color3 = new SolidColorBrush(mediaColors[2]);
+            MainImage = imageFilePath;
 
             var random = new Random();
             var randomDominantColor = random.Next(mediaColors.Count);
+            var titleColor = mediaColors[randomDominantColor];
 
-            TitleBarBrush = new SolidColorBrush(mediaColors[randomDominantColor]);
+            TitleBarBrush = new SolidColorBrush(titleColor);
+            // TitleBarTextBrush = new SolidColorBrush();
         }
 
         #endregion
 
         #region PrivateFields
-
-        private Window _window; 
-        private int _outerMarginSize = 5;
-        private int _windowRadius = 5;
+        
+        private int _outerMarginSize = 10;
+        private int _windowRadius = 10;
         
         private readonly ImageUploadService _imageUpload;
         private readonly ColorCalculator _colorCounter;
         private string _mainImage = "";
 
-        private Brush? _brush1;
-        private Brush? _brush2;
-        private Brush? _brush3;
+        private Brush? _color1;
+        private Brush? _color2;
+        private Brush? _color3;
 
         private Brush _titleBarBrush;
+        private Brush _titleBarTextBrush = new SolidColorBrush(Color.FromRgb(104, 104, 104));
+
+        private string _interpretation;
 
         #endregion
 
         #region PublicProperties
 
-        public Brush Brush1
+        public Brush Color1
         {
-            get => _brush1;
-            set => SetProperty(ref _brush1, value);
+            get => _color1;
+            set => SetProperty(ref _color1, value);
         }
-        public Brush Brush2
+        public Brush Color2
         {
-            get => _brush2;
-            set => SetProperty(ref _brush2, value);
+            get => _color2;
+            set => SetProperty(ref _color2, value);
         }
         
-        public Brush Brush3
+        public Brush Color3
         {
-            get => _brush3;
-            set => SetProperty(ref _brush3, value);
+            get => _color3;
+            set => SetProperty(ref _color3, value);
         }
 
         public string MainImage
@@ -101,25 +108,38 @@ namespace ColorFinder.ViewModels
             get => _mainImage;
             set => SetProperty(ref _mainImage, value);
         }
+        public int OuterMarginSize => _outerMarginSize;
         
-        public int OuterMarginSize
-        {
-            get => _outerMarginSize;
-            set => _outerMarginSize = value;
-        }
-
-        public int WindowRadius
-        {
-            get => _windowRadius;
-            set => _windowRadius = value;
-        }
+        public int WindowRadius => _windowRadius;
+        
         public Thickness OuterMarginSizeThickness => new (OuterMarginSize);
+        
         public CornerRadius WindowCornerRadius => new(WindowRadius);
+        
         public SolidColorBrush ForegroundLightBrush => new (Color.FromRgb(255, 255, 255));
+        
         public Brush TitleBarBrush
         {
             get => _titleBarBrush;
             set => SetProperty(ref _titleBarBrush, value);
+        }
+        
+        public Brush TitleBarTextBrush
+        {
+            get => _titleBarTextBrush;
+            set => SetProperty(ref _titleBarTextBrush, value);
+        }
+        
+        public ColorInterpretation ColorInterpretations => new();
+
+        public string SelectedColorInterpretation
+        {
+            get => _interpretation;
+            set
+            {
+                SetProperty(ref _interpretation, value);
+                
+            }
         }
 
         #endregion
