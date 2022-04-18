@@ -45,14 +45,16 @@ namespace ColorFinder.Models.KMeans
             var alreadyPickedColors = new List<Color>();
             var rnd = new Random();
             var i = 0;
+            var plainColorInPicture = 0;
             
             while (i < ClustersAmount)
             {
                 var randomColorNumber = rnd.Next(_imageColors.Count);
                 var randomColor = _imageColors[randomColorNumber];
-
-                if (alreadyPickedColors.Contains(randomColor))
+                
+                if (alreadyPickedColors.Contains(randomColor) && plainColorInPicture < 3)
                 {
+                    plainColorInPicture++;
                     continue;
                 }
                 
