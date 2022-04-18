@@ -18,7 +18,7 @@ namespace ColorFinder.Models.KMeans
         
         public Color ClusterCenter { get; private set; }
         private readonly List<Color> _clusterColors;
-        private const double Accuracy = 0.01;
+        private const double Accuracy = 0.001;
         
         /// <summary>
         /// Добавить цвет в список цветов этого кластера.
@@ -73,17 +73,20 @@ namespace ColorFinder.Models.KMeans
 
             if (_clusterColors.Count > 0)
             {
+                double a = 0;
                 double r = 0;
                 double g = 0;
                 double b = 0;
                 
                 foreach (var color in _clusterColors)
                 {
+                    a += color.A;
                     r += color.R;
                     g += color.G;
                     b += color.B;
 
                     newCenter = Color.FromArgb(
+                        (int)Math.Floor(a / _clusterColors.Count),
                         (int)Math.Floor(r / _clusterColors.Count), 
                         (int)Math.Floor(g / _clusterColors.Count),
                         (int)Math.Floor(b / _clusterColors.Count)
@@ -92,7 +95,7 @@ namespace ColorFinder.Models.KMeans
             }
             else
             {
-                newCenter = Color.FromArgb(0, 0, 0);
+                newCenter = Color.FromArgb(255,0, 0, 0);
             }
 
             var rangeFromCurrentCenterToNew = EuclidianRangeFromCenter(newCenter);

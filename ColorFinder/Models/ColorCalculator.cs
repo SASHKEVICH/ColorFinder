@@ -17,11 +17,15 @@ namespace ColorFinder.Models
         /// </summary>
         /// <param name="imageFileName">Путь до изображения.</param>
         /// <returns>Список цветов (Colors).</returns>
-        public async Task<List<Color>> GetDominantColors(string imageFileName)
+        public async Task<List<Color>> GetDominantColors(string? imageFileName)
         { 
-            _resizedImage = ResizeImage(imageFileName);
-            _dominantColors = new List<Color>();
+            if (imageFileName is "" or null)
+            {
+                throw new ArgumentNullException(imageFileName);
+            }
             
+            _resizedImage = ResizeImage(imageFileName);
+
             var imageColors = AddColorsFromImageToList();
 
             _colorCalculator = new KMeansClusterCalculator(imageColors);
@@ -39,6 +43,7 @@ namespace ColorFinder.Models
         private static Bitmap ResizeImage(string imageFileName)
         {
             using var originalImage = Image.FromFile(imageFileName);
+            
             Size newSize;
             const int maxResizedDimension = 150;
 

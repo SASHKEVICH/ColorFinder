@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorFinder", "ColorFinder\ColorFinder.csproj", "{809192CA-98BF-4B61-A423-10DC8D96AC08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorFinderTests", "ColorFinderTests\ColorFinderTests.csproj", "{C58927F8-94C4-419F-A62A-952DB680876F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorFinder.Tests", "ColorFinder.Tests\ColorFinder.Tests.csproj", "{C58927F8-94C4-419F-A62A-952DB680876F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
