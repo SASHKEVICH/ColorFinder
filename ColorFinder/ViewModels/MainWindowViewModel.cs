@@ -28,8 +28,6 @@ namespace ColorFinder.ViewModels
             Color3 = new SolidColorBrush(standardColor);
             
             _interpretation = ColorInterpretations.First();
-
-            OnSetColorInterpretationEvent += SetColorsInTextBlocks;
         }
         #endregion
 
@@ -61,8 +59,8 @@ namespace ColorFinder.ViewModels
             var titleColor = _mediaColors[randomDominantColor];
 
             TitleBarBrush = new SolidColorBrush(titleColor);
-            
-            OnSetColorInterpretationEvent.Invoke();
+
+            SetColorsInTextBlocks();
         }
 
         #endregion
@@ -168,16 +166,9 @@ namespace ColorFinder.ViewModels
             set
             {
                 SetProperty(ref _interpretation, value);
-                OnSetColorInterpretationEvent.Invoke();
+                SetColorsInTextBlocks();
             }
         }
-
-        #endregion
-
-        #region Events
-
-        private delegate void SetColorInterpretation();
-        private event SetColorInterpretation OnSetColorInterpretationEvent;
 
         #endregion
 
@@ -185,9 +176,9 @@ namespace ColorFinder.ViewModels
 
         private void SetColorsInTextBlocks()
         {
-            var color1 = _dominantColors[0];
-            var color2 = _dominantColors[1];
-            var color3 = _dominantColors[2];
+            var color1 = _dominantColors![0];
+            var color2 = _dominantColors![1];
+            var color3 = _dominantColors![2];
             
             switch (SelectedColorInterpretation)
             {
@@ -197,13 +188,16 @@ namespace ColorFinder.ViewModels
                     ColorInterpretation3 = $"RGB: ({color3.R}, {color3.G}, {color3.B})";
                     break;
                 case "Hex":
-                    ColorInterpretation1 = "#" + color1.R.ToString("X2") + 
+                    ColorInterpretation1 = "#" + 
+                                           color1.R.ToString("X2") + 
                                            color1.G.ToString("X2") + 
                                            color1.B.ToString("X2");
-                    ColorInterpretation2 = "#" + color2.R.ToString("X2") + 
+                    ColorInterpretation2 = "#" + 
+                                           color2.R.ToString("X2") + 
                                            color2.G.ToString("X2") + 
                                            color2.B.ToString("X2");
-                    ColorInterpretation3 = "#" + color3.R.ToString("X2") + 
+                    ColorInterpretation3 = "#" + 
+                                           color3.R.ToString("X2") + 
                                            color3.G.ToString("X2") + 
                                            color3.B.ToString("X2");
                     break;
