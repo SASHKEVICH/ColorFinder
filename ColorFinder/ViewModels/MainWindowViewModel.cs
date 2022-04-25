@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using ColorFinder.Models;
+using ColorFinder.Models.ColorCalculator;
 using ColorFinder.Services;
+using ColorFinder.ViewModels.Commands;
 using Prism.Commands;
 using Prism.Mvvm;
 using Brush = System.Windows.Media.Brush;
@@ -17,64 +20,30 @@ namespace ColorFinder.ViewModels
         #region Constructor
         public MainWindowViewModel()
         {
-            _imageUpload = new ImageUploadService();
             _colorCounter = new ColorCalculator();
-            ImageUploadCommand = new DelegateCommand(ImageUploadCommandExecute);
 
-            var standardColor = Color.FromArgb(100, 196, 196, 196);
-            
-            Color1 = new SolidColorBrush(standardColor);
-            Color2 = new SolidColorBrush(standardColor);
-            Color3 = new SolidColorBrush(standardColor);
+            var findDominantColorsCommand = new FindDominantColorsCommand(this);
+            FindDominantColorsCommand = new DelegateCommand(findDominantColorsCommand.Execute);
+
+            FillRectanglesByColors();
             
             _interpretation = ColorInterpretations.First();
         }
         #endregion
 
         #region Commands
-        public DelegateCommand ImageUploadCommand { get; }
-        private async void ImageUploadCommandExecute()
-        {
-            var imageFilePath = _imageUpload.GetImageFileName();
-            if (imageFilePath == "")
-            {
-                return;
-            }
-            
-            _mediaColors = new List<Color>();
-            _dominantColors = await _colorCounter.GetDominantColors(imageFilePath);
-
-            foreach (var color in _dominantColors)
-            {
-                _mediaColors.Add(Color.FromArgb(color.A, color.R, color.G, color.B));
-            }
-            
-            Color1 = new SolidColorBrush(_mediaColors[0]);
-            Color2 = new SolidColorBrush(_mediaColors[1]);
-            Color3 = new SolidColorBrush(_mediaColors[2]);
-            MainImage = imageFilePath;
-
-            var random = new Random();
-            var randomDominantColor = random.Next(_mediaColors.Count);
-            var titleColor = _mediaColors[randomDominantColor];
-
-            TitleBarBrush = new SolidColorBrush(titleColor);
-
-            SetColorsInTextBlocks();
-        }
+        public DelegateCommand FindDominantColorsCommand { get; }
 
         #endregion
 
         #region PrivateFields
-
+        
         private List<System.Drawing.Color>? _dominantColors;
-        private List<Color>? _mediaColors;
+        private readonly ColorCalculator _colorCounter;
         
         private int _outerMarginSize = 10;
         private int _windowRadius = 10;
         
-        private readonly ImageUploadService _imageUpload;
-        private readonly ColorCalculator _colorCounter;
         private string _mainImage = "";
 
         private Brush? _color1;
@@ -86,7 +55,7 @@ namespace ColorFinder.ViewModels
         private string _colorInterpretation3 = "";
 
         private Brush? _titleBarBrush;
-        private Brush? _titleBarTextBrush = new SolidColorBrush(Color.FromRgb(104, 104, 104));
+        private Brush? _titleBarTextBrush;
 
         private string _interpretation;
 
@@ -154,7 +123,7 @@ namespace ColorFinder.ViewModels
         
         public Brush TitleBarTextBrush
         {
-            get => _titleBarTextBrush ?? new SolidColorBrush();
+            get => _titleBarTextBrush ?? new SolidColorBrush(Color.FromRgb(104, 104, 104));
             set => SetProperty(ref _titleBarTextBrush, value);
         }
         
@@ -171,9 +140,9 @@ namespace ColorFinder.ViewModels
         }
 
         #endregion
-
+        
         #region Private Methods
-
+        
         private void SetColorsInTextBlocks()
         {
             var color1 = _dominantColors![0];
@@ -202,6 +171,73 @@ namespace ColorFinder.ViewModels
                                            color3.B.ToString("X2");
                     break;
             }
+        }
+
+        private void FillRectanglesByColors()
+        {
+            var standardColor = Color.FromArgb(100, 196, 196, 196);
+            
+            Color1 = new SolidColorBrush(standardColor);
+            Color2 = new SolidColorBrush(standardColor);
+            Color3 = new SolidColorBrush(standardColor);
+        }
+        
+        private void FillRectanglesByColors(List<Color> colors)
+        {
+            Color1 = new SolidColorBrush(colors[0]);
+            Color2 = new SolidColorBrush(colors[1]);
+            Color3 = new SolidColorBrush(colors[2]);
+        }
+
+        private List<Color> ConvertDrawingColorsToMedia(List<System.Drawing.Color> colors)
+        {
+            return colors.Select(color => Color.FromArgb(color.A, color.R, color.G, color.B)).ToList();
+        }
+
+        private void SetTitleBarBrush(List<Color> colors)
+        {
+            var random = new Random();
+            var randomDominantColorNumber = random.Next(colors.Count);
+            var titleBarColor = colors[randomDominantColorNumber];
+            var titleBarDrawingColor = System.Drawing.Color.FromArgb(
+                    titleBarColor.A, 
+                    titleBarColor.R, 
+                    titleBarColor.G, 
+                    titleBarColor.B);
+            
+            SetTitleBarTextBrush(titleBarDrawingColor);
+            TitleBarBrush = new SolidColorBrush(titleBarColor);
+        }
+
+        private void SetTitleBarTextBrush(System.Drawing.Color color)
+        {
+            var colorRangeToBlack = EuclidianRangeHelper.EuclidianRange(color, System.Drawing.Color.Black);
+            var colorRangeToWhite = EuclidianRangeHelper.EuclidianRange(color, System.Drawing.Color.White);
+
+            TitleBarTextBrush = colorRangeToBlack < colorRangeToWhite 
+                ? new SolidColorBrush(Color.FromRgb(191, 191, 191)) 
+                : new SolidColorBrush(Color.FromRgb(35, 34, 34));
+        }
+
+        #endregion
+
+        #region Public Methods
+        
+        public async Task FindDominantColors(string imagePath)
+        {
+            _dominantColors = await _colorCounter.GetDominantColors(imagePath);
+
+            var mediaColors = ConvertDrawingColorsToMedia(_dominantColors);
+            
+            FillRectanglesByColors(mediaColors);
+
+            SetTitleBarBrush(mediaColors);
+            
+            SetColorsInTextBlocks();
+        }
+        public void SetImageInWindow(string imageFilePath)
+        {
+            MainImage = imageFilePath;
         }
 
         #endregion

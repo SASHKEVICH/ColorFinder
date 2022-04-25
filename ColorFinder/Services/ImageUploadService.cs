@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using Microsoft.Win32;
 
 namespace ColorFinder.Services
 {
@@ -15,6 +16,18 @@ namespace ColorFinder.Services
             };
             
             return openDialog.ShowDialog() == true ? openDialog.FileName : "";
+        }
+
+        public string GetImageFilePath()
+        {
+            var imageName = GetImageFileName();
+
+            if (imageName is "" or null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            return imageName;
         }
     }
 }

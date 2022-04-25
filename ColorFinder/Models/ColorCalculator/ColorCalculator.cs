@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using ColorFinder.Models.KMeans;
 
-namespace ColorFinder.Models
+namespace ColorFinder.Models.ColorCalculator
 {
     public class ColorCalculator
     {

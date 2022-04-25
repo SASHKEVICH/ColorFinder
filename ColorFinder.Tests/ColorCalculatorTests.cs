@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ColorFinder.Models;
+using ColorFinder.Models.ColorCalculator;
 using NUnit.Framework;
 
 namespace ColorFinderTests

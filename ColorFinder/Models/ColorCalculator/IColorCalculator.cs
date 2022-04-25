@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace ColorFinder.Models
+namespace ColorFinder.Models.ColorCalculator
 {
     public interface IColorCalculator
     {
