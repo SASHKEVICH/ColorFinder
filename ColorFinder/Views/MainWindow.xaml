@@ -282,8 +282,10 @@
                                             Grid.Column="1"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            FontFamily="Roboto"
-                                            FontSize="16"
+                                            FontFamily="Montserrat"
+                                            FontWeight="Light"
+                                            FontStyle="Italic"
+                                            FontSize="17"
                                             Foreground="{Binding TitleBarTextBrush}">
                                             ColorFinder
                                         </TextBlock>
@@ -293,14 +295,17 @@
                                             <Button 
                                                 Style="{StaticResource WindowControlButton}" 
                                                 Content="_"
+                                                FontWeight="Regular"
                                                 Click="MinimizeWindowOnClick"/>
                                             <Button 
                                                 Style="{StaticResource WindowControlButton}" 
                                                 Content="[ ]"
+                                                FontWeight="Regular"
                                                 Click="MaximizeWindowOnClick"/>
                                             <Button
                                                 Style="{StaticResource WindowCloseButton}" 
                                                 Content="X"
+                                                FontWeight="Regular"
                                                 Click="CloseWindowOnClick"/>
                                         </StackPanel>
                                     </Grid>
@@ -378,13 +383,14 @@
                                                 Style="{StaticResource RoundedButton}"
                                                 Height="45"
                                                 VerticalAlignment="Bottom"
-                                                Command="{Binding ImageUploadCommand}"
+                                                Command="{Binding FindDominantColorsCommand}"
                                                 Background="{Binding TitleBarBrush}"
                                                 BorderBrush="DarkGray"
                                                 Content="Загрузить фото"
-                                                Foreground="#7e7e7e"
-                                                FontFamily="Roboto"
-                                                FontSize="13"
+                                                Foreground="{Binding TitleBarTextBrush}"
+                                                FontFamily="Montserrat"
+                                                FontWeight="Light"
+                                                FontSize="14"
                                             />
                                         </Grid>
                                         
@@ -398,7 +404,9 @@
                                                 Margin="0 0 5 0"
                                                 FontFamily="Roboto"
                                                 FontSize="14"
-                                                Foreground="#7e7e7e">
+                                                Foreground="#7e7e7e"
+                                                FontWeight="Light"
+                                                FontStyle="Italic">
                                                 Бекренев Александр, 2022 год.
                                             </TextBlock>
                                         </Grid>
