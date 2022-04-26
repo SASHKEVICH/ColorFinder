@@ -5,7 +5,7 @@ namespace ColorFinder.Services
 {
     public class ImageUploadService : IUploadService
     {
-        public string GetImageFileName()
+        private string GetImageFileName()
         {
             var openDialog = new OpenFileDialog
             {

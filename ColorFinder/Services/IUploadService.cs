@@ -2,6 +2,6 @@
 {
     public interface IUploadService
     {
-        public string GetImageFileName();
+        public string GetImageFilePath();
     }
 }

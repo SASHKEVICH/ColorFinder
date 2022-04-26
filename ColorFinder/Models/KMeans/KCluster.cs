@@ -35,9 +35,9 @@ namespace ColorFinder.Models.KMeans
         /// <returns></returns>
         public bool IsItEnoughForRecalcultaions()
         {
-            var range = RecalculateCenter();
+            var rangeFromCurrentCenterToNew = RecalculateCenter();
 
-            if (range > Accuracy) return false;
+            if (rangeFromCurrentCenterToNew > Accuracy) return false;
             
             return true;
         }
@@ -54,34 +54,7 @@ namespace ColorFinder.Models.KMeans
         
         private double RecalculateCenter()
         {
-            var newCenter = new Color();
-
-            if (_clusterColors.Count > 0)
-            {
-                double a = 0;
-                double r = 0;
-                double g = 0;
-                double b = 0;
-                
-                foreach (var color in _clusterColors)
-                {
-                    a += color.A;
-                    r += color.R;
-                    g += color.G;
-                    b += color.B;
-
-                    newCenter = Color.FromArgb(
-                        (int)Math.Floor(a / _clusterColors.Count),
-                        (int)Math.Floor(r / _clusterColors.Count), 
-                        (int)Math.Floor(g / _clusterColors.Count),
-                        (int)Math.Floor(b / _clusterColors.Count)
-                    );
-                }
-            }
-            else
-            {
-                newCenter = Color.FromArgb(255,0, 0, 0);
-            }
+            var newCenter = MeanNewCenter();
 
             var rangeFromCurrentCenterToNew = EuclidianRangeFromCenter(newCenter);
             ClusterCenter = newCenter;
@@ -89,6 +62,33 @@ namespace ColorFinder.Models.KMeans
             _clusterColors.Clear();
 
             return rangeFromCurrentCenterToNew;
+        }
+
+        private Color MeanNewCenter()
+        {
+            var newCenter = new Color();
+
+            double a = 0;
+            double r = 0;
+            double g = 0;
+            double b = 0;
+            
+            foreach (var color in _clusterColors)
+            {
+                a += color.A;
+                r += color.R;
+                g += color.G;
+                b += color.B;
+
+                newCenter = Color.FromArgb(
+                    (int)Math.Floor(a / _clusterColors.Count),
+                    (int)Math.Floor(r / _clusterColors.Count), 
+                    (int)Math.Floor(g / _clusterColors.Count),
+                    (int)Math.Floor(b / _clusterColors.Count)
+                );
+            }
+
+            return newCenter;
         }
 
     }

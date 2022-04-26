@@ -5,11 +5,12 @@ namespace ColorFinder.ViewModels.Commands
 {
     public class FindDominantColorsCommand
     {
-        private readonly ImageUploadService _imageUploader = new ();
+        private readonly IUploadService _imageUploader;
         private readonly MainWindowViewModel _viewModel;
 
         public FindDominantColorsCommand(MainWindowViewModel viewModel)
         {
+            _imageUploader = new ImageUploadService();
             _viewModel = viewModel;
         }
 
