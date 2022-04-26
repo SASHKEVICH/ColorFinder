@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Media;
 using ColorFinder.Models;
 using ColorFinder.Models.ColorCalculator;
-using ColorFinder.Services;
 using ColorFinder.ViewModels.Commands;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -199,6 +198,7 @@ namespace ColorFinder.ViewModels
             var random = new Random();
             var randomDominantColorNumber = random.Next(colors.Count);
             var titleBarColor = colors[randomDominantColorNumber];
+            
             var titleBarDrawingColor = System.Drawing.Color.FromArgb(
                     titleBarColor.A, 
                     titleBarColor.R, 

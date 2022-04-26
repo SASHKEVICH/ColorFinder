@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
@@ -10,6 +10,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Assets\fully_transparent.png" />
+      <None Remove="Assets\multi_colored.jpg" />
+      <None Remove="Assets\plain_black.jpg" />
+      <None Remove="Assets\two_colors.jpg" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="NUnit" Version="3.13.2" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
@@ -18,14 +25,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ColorFinder\ColorFinder.csproj" />
-    </ItemGroup>
-
+    </ItemGroup>    
     <ItemGroup>
-      <Folder Include="Assets" />
-    </ItemGroup>
-    
-    <ItemGroup>
+        <Resource Include="Assets\multi_colored.jpg" />
+		<Resource Include="Assets\fully_transparent.png" />
         <Resource Include="Assets\plain_black.jpg" />
+        <Resource Include="Assets\two_colors.jpg" />
     </ItemGroup>
 
 </Project>

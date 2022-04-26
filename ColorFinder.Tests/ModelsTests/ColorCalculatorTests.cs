@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ColorFinder.Models.ColorCalculator;
 using NUnit.Framework;
 
-namespace ColorFinderTests
+namespace ColorFinderTests.ModelsTests
 {
     public class ColorCalculatorTests
     {
@@ -20,7 +20,7 @@ namespace ColorFinderTests
         [Test]
         public async Task GetDominantColors_onePlainColorPicture_3sameColorsReturned()
         {
-            var pictureFilePath = "G:\\Code\\C#\\ColorFinder\\ColorFinder\\ColorFinder.Tests\\Assets\\plain_black.jpg";
+            const string pictureFilePath = "../../../../ColorFinder.Tests/Assets/plain_black.jpg";
             
             var actualDominantColors = await _calculator!.GetDominantColors(pictureFilePath);
             
@@ -30,7 +30,7 @@ namespace ColorFinderTests
         [Test]
         public async Task GetDominantColors_multiColoredPicture_3diffrerentColorsReturned()
         {
-            var pictureFilePath = "G:\\Code\\C#\\ColorFinder\\ColorFinder\\ColorFinder.Tests\\Assets\\multi_colored.jpg";
+            const string pictureFilePath = "../../../../ColorFinder.Tests/Assets/multi_colored.jpg";
             
             var actualDominantColors = await _calculator!.GetDominantColors(pictureFilePath);
 
@@ -40,7 +40,7 @@ namespace ColorFinderTests
         [Test]
         public async Task GetDominantColors_fullyTransparentPicture_3transparentColorsReturned()
         {
-            var pictureFilePath = "G:\\Code\\C#\\ColorFinder\\ColorFinder\\ColorFinder.Tests\\Assets\\fully_transparent.png";
+            var pictureFilePath = "../../../../ColorFinder.Tests/Assets/fully_transparent.png";
             
             var actualDominantColors= await _calculator!.GetDominantColors(pictureFilePath);
 
@@ -48,7 +48,7 @@ namespace ColorFinderTests
         }
         
         [Test]
-        public async Task GetDominantColors_imageFileNameIsEmptyOrNull_ExceptionReturned()
+        public void GetDominantColors_imageFileNameIsEmptyOrNull_ExceptionReturned()
         {
             Assert.ThrowsAsync<ArgumentNullException>(async () => await _calculator!.GetDominantColors(""));
             Assert.ThrowsAsync<ArgumentNullException>(async () => await _calculator!.GetDominantColors(null));
@@ -56,7 +56,7 @@ namespace ColorFinderTests
         
         private static bool AllTheSameElements<T>(List<T> list)
         {
-            return list.TrueForAll(elem => elem.Equals(list[0]));
+            return list.TrueForAll(element => element.Equals(list[0]));
         }
         
         private static bool ListHasDuplicates<T>(List<T> list)

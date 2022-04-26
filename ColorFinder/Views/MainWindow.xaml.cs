@@ -11,6 +11,7 @@ namespace ColorFinder.Views
         {
             InitializeComponent();
         }
+        
         private void MinimizeWindowOnClick(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
