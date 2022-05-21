@@ -24,6 +24,7 @@ namespace ColorFinderTests.ModelsTests
             
             var actualDominantColors = await _calculator!.GetDominantColors(pictureFilePath);
             
+            Assert.That(actualDominantColors, Is.Not.Null);
             Assert.That(AllTheSameElements(actualDominantColors));
         }
         
@@ -33,7 +34,8 @@ namespace ColorFinderTests.ModelsTests
             const string pictureFilePath = "../../../../ColorFinder.Tests/Assets/multi_colored.jpg";
             
             var actualDominantColors = await _calculator!.GetDominantColors(pictureFilePath);
-
+            
+            Assert.That(actualDominantColors, Is.Not.Null);
             Assert.That(!ListHasDuplicates(actualDominantColors));
         }
         
@@ -43,7 +45,8 @@ namespace ColorFinderTests.ModelsTests
             var pictureFilePath = "../../../../ColorFinder.Tests/Assets/fully_transparent.png";
             
             var actualDominantColors= await _calculator!.GetDominantColors(pictureFilePath);
-
+            
+            Assert.That(actualDominantColors, Is.Not.Null);
             Assert.That(AllTheSameElements(actualDominantColors));
         }
         

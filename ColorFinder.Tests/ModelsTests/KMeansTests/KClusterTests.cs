@@ -32,7 +32,7 @@ namespace ColorFinderTests.ModelsTests.KMeansTests
         [Test]
         public void RecalculateCenter_ClustersColorsFilled_NearlyPinkReturned()
         {
-            var method = GetterPrivateMethods.GetMethod<KCluster>(_testCluster,"RecalculateCenter");
+            var method = GetterPrivateMethods.GetMethod<KCluster>(_testCluster, "RecalculateCenter");
 
             var expectedColor = Color.FromArgb(255, 170, 85, 85);
             
