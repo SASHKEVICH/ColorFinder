@@ -5,7 +5,7 @@ namespace ColorFinder.Services
 {
     public class ImageUploadService : IUploadService
     {
-        private string GetImageFileName()
+        public string GetImageFilePath()
         {
             var openDialog = new OpenFileDialog
             {
@@ -15,19 +15,14 @@ namespace ColorFinder.Services
                          "Portable Network Graphic (*.png)|*.png"
             };
             
-            return openDialog.ShowDialog() == true ? openDialog.FileName : "";
-        }
-
-        public string GetImageFilePath()
-        {
-            var imageName = GetImageFileName();
-
-            if (imageName is "" or null)
+            var imagePath = openDialog.ShowDialog() == true ? openDialog.FileName : "";
+            
+            if (imagePath is "" or null)
             {
                 throw new ArgumentNullException();
             }
             
-            return imageName;
+            return imagePath;
         }
     }
 }

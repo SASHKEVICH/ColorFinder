@@ -6,7 +6,7 @@ using ColorFinder.Models.ColorCalculator;
 
 namespace ColorFinder.Models.KMeans
 {
-    public class KMeansClusterCalculator : IColorCalculator
+    public class KMeansClusterCalculatorMethod : IColorCalculatorMethod
     {
         public KMeansClusterCalculator(List<Color> imageColors)
         {

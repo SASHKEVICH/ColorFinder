@@ -8,9 +8,9 @@ namespace ColorFinder.Models.ColorCalculator
 {
     public class ColorCalculator
     {
+        private IColorCalculatorMethod? _colorCalculatorMethod;
         private Bitmap _resizedImage = new (100, 100);
         private List<Color> _dominantColors = new ();
-        private IColorCalculator? _colorCalculator;
 
         /// <summary>
         /// Находит доминантые цвета на изображении.
@@ -28,9 +28,9 @@ namespace ColorFinder.Models.ColorCalculator
 
             var imageColors = AddColorsFromImageToList();
 
-            _colorCalculator = new KMeansClusterCalculator(imageColors);
+            _colorCalculatorMethod = new KMeansClusterCalculatorMethod(imageColors);
 
-            _dominantColors = await _colorCalculator.GetDominantColors();
+            _dominantColors = await _colorCalculatorMethod.GetDominantColors();
             
             return _dominantColors;
         }

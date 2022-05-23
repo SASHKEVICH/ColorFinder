@@ -1,4 +1,5 @@
 ﻿using System;
+using ColorFinder.Models.ColorCalculator;
 using ColorFinder.Services;
 
 namespace ColorFinder.ViewModels.Commands
@@ -6,11 +7,13 @@ namespace ColorFinder.ViewModels.Commands
     public class FindDominantColorsCommand
     {
         private readonly IUploadService _imageUploader;
+        private readonly ColorCalculator _colorCalculator;
         private readonly MainWindowViewModel _viewModel;
 
         public FindDominantColorsCommand(MainWindowViewModel viewModel)
         {
             _imageUploader = new ImageUploadService();
+            _colorCalculator = new ColorCalculator();
             _viewModel = viewModel;
         }
 
@@ -26,9 +29,17 @@ namespace ColorFinder.ViewModels.Commands
                 return;
             }
 
-            await _viewModel.FindDominantColors(imageFilePath);
+            var dominantColors = await FindDominantColors(imageFilePath);
 
+            _viewModel.FillDominantColors(dominantColors);
             _viewModel.SetImageInWindow(imageFilePath);
         }
+
+        private async Task<List<Color>> FindDominantColors(string imageFilePath)
+        {
+            var dominantColors = await _colorCalculator.GetDominantColors(imageFilePath);
+
+            return dominantColors;
+        } 
     }
 }

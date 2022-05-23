@@ -19,14 +19,15 @@ namespace ColorFinder.ViewModels
         #region Constructor
         public MainWindowViewModel()
         {
-            _colorCounter = new ColorCalculator();
-
             var findDominantColorsCommand = new FindDominantColorsCommand(this);
             FindDominantColorsCommand = new DelegateCommand(findDominantColorsCommand.Execute);
 
-            FillRectanglesByColors();
+            FillRectanglesByStandardColor();
             
             _interpretation = ColorInterpretations.First();
+
+            _outerMarginSize = 10;
+            _windowRadius = 10;
         }
         #endregion
 
@@ -36,22 +37,21 @@ namespace ColorFinder.ViewModels
         #endregion
 
         #region PrivateFields
-        
+
         private List<System.Drawing.Color>? _dominantColors;
-        private readonly ColorCalculator _colorCounter;
+
+        private readonly int _outerMarginSize;
+        private readonly int _windowRadius;
         
-        private int _outerMarginSize = 10;
-        private int _windowRadius = 10;
-        
-        private string _mainImage = "";
+        private string? _mainImagePath;
 
         private Brush? _color1;
         private Brush? _color2;
         private Brush? _color3;
 
-        private string _colorInterpretation1 = "";
-        private string _colorInterpretation2 = "";
-        private string _colorInterpretation3 = "";
+        private string? _colorInterpretation1;
+        private string? _colorInterpretation2;
+        private string? _colorInterpretation3;
 
         private Brush? _titleBarBrush;
         private Brush? _titleBarTextBrush;
@@ -98,10 +98,10 @@ namespace ColorFinder.ViewModels
             set => SetProperty(ref _colorInterpretation3, value);
         }
 
-        public string MainImage
+        public string MainImagePath
         {
-            get => _mainImage;
-            set => SetProperty(ref _mainImage, value);
+            get => _mainImagePath;
+            set => SetProperty(ref _mainImagePath, value);
         }
         
         public int OuterMarginSize => _outerMarginSize;
@@ -172,7 +172,7 @@ namespace ColorFinder.ViewModels
             }
         }
 
-        private void FillRectanglesByColors()
+        private void FillRectanglesByStandardColor()
         {
             var standardColor = Color.FromArgb(100, 196, 196, 196);
             
@@ -181,7 +181,7 @@ namespace ColorFinder.ViewModels
             Color3 = new SolidColorBrush(standardColor);
         }
         
-        private void FillRectanglesByColors(List<Color> colors)
+        private void FillRectanglesByDominantColors(List<Color> colors)
         {
             Color1 = new SolidColorBrush(colors[0]);
             Color2 = new SolidColorBrush(colors[1]);
@@ -223,13 +223,13 @@ namespace ColorFinder.ViewModels
 
         #region Public Methods
         
-        public async Task FindDominantColors(string imagePath)
+        public void FillDominantColors(List<Color> dominantColors)
         {
-            _dominantColors = await _colorCounter.GetDominantColors(imagePath);
+            _dominantColors = dominantColors;
 
             var mediaColors = ConvertDrawingColorsToMedia(_dominantColors);
             
-            FillRectanglesByColors(mediaColors);
+            FillRectanglesByDominantColors(mediaColors);
 
             SetTitleBarBrush(mediaColors);
             
@@ -237,7 +237,7 @@ namespace ColorFinder.ViewModels
         }
         public void SetImageInWindow(string imageFilePath)
         {
-            MainImage = imageFilePath;
+            MainImagePath = imageFilePath;
         }
 
         #endregion

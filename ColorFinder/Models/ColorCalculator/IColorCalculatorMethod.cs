@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ColorFinder.Models.ColorCalculator
 {
-    public interface IColorCalculator
+    public interface IColorCalculatorMethod
     {
         public Task<List<Color>> GetDominantColors();
     }
