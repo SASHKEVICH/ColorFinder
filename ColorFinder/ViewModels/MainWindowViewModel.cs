@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using ColorFinder.Models;
-using ColorFinder.Models.ColorCalculator;
+using ColorFinder.Models.KMeans;
 using ColorFinder.ViewModels.Commands;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -19,7 +18,9 @@ namespace ColorFinder.ViewModels
         #region Constructor
         public MainWindowViewModel()
         {
-            var findDominantColorsCommand = new FindDominantColorsCommand(this);
+            var calculatorMethod = new KMeansClusterCalculatorMethod();
+            var findDominantColorsCommand = new FindDominantColorsCommand(this, calculatorMethod);
+            
             FindDominantColorsCommand = new DelegateCommand(findDominantColorsCommand.Execute);
 
             FillRectanglesByStandardColor();
@@ -223,7 +224,7 @@ namespace ColorFinder.ViewModels
 
         #region Public Methods
         
-        public void FillDominantColors(List<Color> dominantColors)
+        public void FillDominantColors(List<System.Drawing.Color> dominantColors)
         {
             _dominantColors = dominantColors;
 

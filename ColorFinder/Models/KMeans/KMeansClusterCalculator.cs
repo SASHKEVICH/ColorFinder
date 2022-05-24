@@ -8,21 +8,23 @@ namespace ColorFinder.Models.KMeans
 {
     public class KMeansClusterCalculatorMethod : IColorCalculatorMethod
     {
-        public KMeansClusterCalculator(List<Color> imageColors)
+        public KMeansClusterCalculatorMethod()
         {
             _kClusters = new List<KCluster>();
-            _imageColors = imageColors;
+            ImageColors = new List<Color>();
         }
         
         private const int ClustersAmount = 3;
-        private readonly List<Color> _imageColors;
         private readonly List<KCluster> _kClusters;
 
+        public List<Color> ImageColors { get; set; }
+        
         public async Task<List<Color>> GetDominantColors()
         {
-            await FindClusters();
+            await FindClustersCenters();
 
             var dominantColors = new List<Color>();
+            
             _kClusters.ForEach(cluster => dominantColors.Add(cluster.ClusterCenter));
 
             return dominantColors;
@@ -32,7 +34,7 @@ namespace ColorFinder.Models.KMeans
         /// Шаблонный метод поиск центров кластеров.
         /// </summary>
         /// <returns>Список к-средних кластеров.</returns>
-        private async Task FindClusters()
+        private async Task FindClustersCenters()
         {
             SetupClusters();
             await DoCentersRecalclulations();
@@ -50,8 +52,8 @@ namespace ColorFinder.Models.KMeans
             
             while (i < ClustersAmount)
             {
-                var randomColorNumber = rnd.Next(_imageColors.Count);
-                var randomColor = _imageColors[randomColorNumber];
+                var randomColorNumber = rnd.Next(ImageColors.Count);
+                var randomColor = ImageColors[randomColorNumber];
                 
                 if (alreadyPickedColors.Contains(randomColor) && plainColorInPicture < 3)
                 {
@@ -60,7 +62,7 @@ namespace ColorFinder.Models.KMeans
                 }
                 
                 alreadyPickedColors.Add(randomColor);
-                _kClusters.Add(new KCluster(_imageColors[randomColorNumber]));
+                _kClusters.Add(new KCluster(ImageColors[randomColorNumber]));
                 
                 i++;
             }
@@ -97,7 +99,7 @@ namespace ColorFinder.Models.KMeans
         /// </summary>
         private void FillClustersByColors()
         {
-            foreach (var color in _imageColors)
+            foreach (var color in ImageColors)
             {
                 var shortedDistance = double.MaxValue;
                 var closestCluster = new KCluster(new Color());

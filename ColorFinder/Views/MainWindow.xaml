@@ -397,7 +397,7 @@
                                         <Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="0.5" Fill="Black"/>
                                         
                                         <Grid Grid.Column="2" ShowGridLines="True">
-                                            <Image Source="{Binding MainImage}" Margin="0 0 -1 25"/>
+                                            <Image Source="{Binding MainImagePath}" Margin="0 0 -1 25"/>
                                             <TextBlock
                                                 VerticalAlignment="Bottom"
                                                 HorizontalAlignment="Right"

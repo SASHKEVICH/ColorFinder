@@ -45,19 +45,20 @@ namespace ColorFinder.Models.KMeans
         /// <summary>
         /// Calculates Euclidian range between cluster's center and a new color in rgb-dimension.
         /// </summary>
-        /// <param name="newColor"></param>
+        /// <param name="newCenter"></param>
         /// <returns></returns>
-        public double EuclidianRangeFromCenter(Color newColor)
+        public double EuclidianRangeFromCenter(Color newCenter)
         {
-            return EuclidianRangeHelper.EuclidianRange(ClusterCenter, newColor);
+            return EuclidianRangeHelper.EuclidianRange(ClusterCenter, newCenter);
         }
         
         private double GetRangeFromCurrentCenterToNew()
         {
             var newCenter = RecalculateCenter();
 
-            var rangeFromCurrentCenterToNew = EuclidianRangeFromCenter(newCenter);
             ClusterCenter = newCenter;
+            
+            var rangeFromCurrentCenterToNew = EuclidianRangeFromCenter(newCenter);
             
             _clusterColors.Clear();
 

@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
-using ColorFinder.Models.KMeans;
 
 namespace ColorFinder.Models.ColorCalculator
 {
     public class ColorCalculator
     {
-        private IColorCalculatorMethod? _colorCalculatorMethod;
-        private Bitmap _resizedImage = new (100, 100);
-        private List<Color> _dominantColors = new ();
+        private readonly IColorCalculatorMethod _colorCalculatorMethod;
+        private Bitmap _resizedImage;
+        private List<Color> _dominantColors;
+
+        public ColorCalculator(IColorCalculatorMethod calculatorMethod)
+        {
+            _colorCalculatorMethod = calculatorMethod;
+            
+            _resizedImage = new Bitmap(100, 100);
+            _dominantColors = new List<Color>();
+        }
 
         /// <summary>
         /// Находит доминантые цвета на изображении.
@@ -24,45 +31,17 @@ namespace ColorFinder.Models.ColorCalculator
                 throw new ArgumentNullException(imageFileName);
             }
             
-            _resizedImage = ResizeImage(imageFileName);
+            _resizedImage = ImageResizer.ResizeImage(imageFileName);
 
             var imageColors = AddColorsFromImageToList();
 
-            _colorCalculatorMethod = new KMeansClusterCalculatorMethod(imageColors);
+            _colorCalculatorMethod.ImageColors = imageColors;
 
             _dominantColors = await _colorCalculatorMethod.GetDominantColors();
             
             return _dominantColors;
         }
 
-        /// <summary>
-        /// Сжимает изображение до разрешения, у которого одно из измерений строго 150 пикселей, сохраняя пропорции.
-        /// </summary>
-        /// <param name="imageFileName">Имя файла с изображением.</param>
-        /// <returns>Сжатое изображение.</returns>
-        private static Bitmap ResizeImage(string imageFileName)
-        {
-            using var originalImage = Image.FromFile(imageFileName);
-            
-            Size newSize;
-            const int maxResizedDimension = 150;
-
-            if (originalImage.Height > originalImage.Width)
-            {
-                newSize = new Size(maxResizedDimension, 
-                    (int)Math.Floor(originalImage.Height / originalImage.Width * 1.0f * maxResizedDimension));
-            }
-            else
-            {
-                newSize = new Size((int)Math.Floor(originalImage.Width / originalImage.Height * 1.0f * maxResizedDimension), 
-                    maxResizedDimension);
-            }
-
-            var resizedImage = new Bitmap(originalImage, newSize);
-
-            return resizedImage;
-        }
-        
         /// <summary>
         /// Добавляет цвета из изображения в список.
         /// </summary>
