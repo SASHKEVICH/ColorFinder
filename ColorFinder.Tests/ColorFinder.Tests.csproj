@@ -30,7 +30,6 @@
         <Resource Include="Assets\multi_colored.jpg" />
 		<Resource Include="Assets\fully_transparent.png" />
         <Resource Include="Assets\plain_black.jpg" />
-        <Resource Include="Assets\two_colors.jpg" />
     </ItemGroup>
 
 </Project>
