@@ -24,12 +24,17 @@ namespace ColorFinderTests.ModelsTests
         [Test]
         public async Task GetDominantColors_onePlainColorPicture_3sameColorsReturned()
         {
-            const string pictureFilePath = "../../../../ColorFinder.Tests/Assets/plain_black.jpg"; // Путь до изображения
+            // Путь до изображения
+            const string pictureFilePath = "../../../../ColorFinder.Tests/Assets/plain_black.jpg"; 
             
-            var actualDominantColors = await _calculator!.GetDominantColors(pictureFilePath); // Получаемые доминантные цвета
+            // Получаемые доминантные цвета
+            var actualDominantColors = await _calculator!.GetDominantColors(pictureFilePath);
             
-            Assert.That(actualDominantColors, Is.Not.Null); // Проверка на то, что массив цветов существует
-            Assert.That(AllTheSameElements(actualDominantColors)); // Проверка на то, что все полученные цвета одинаковы друг к другу
+            // Проверка на то, что массив цветов существует
+            Assert.That(actualDominantColors, Is.Not.Null); 
+            // Проверка на то, что все полученные цвета одинаковы друг к другу
+            Assert.That(AllTheSameElements(actualDominantColors)); 
+            // Проверка на то, все ли элементы списка близки к черному
             Assert.That(EveryColorInListTheSameTo(Color.FromArgb(255, 16, 13, 8), actualDominantColors));
         }
         

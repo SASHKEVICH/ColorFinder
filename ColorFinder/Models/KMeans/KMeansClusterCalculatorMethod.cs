@@ -10,28 +10,33 @@ namespace ColorFinder.Models.KMeans
     {
         public KMeansClusterCalculatorMethod()
         {
-            _kClusters = new List<KCluster>();
             ImageColors = new List<Color>();
         }
         
         private const int ClustersAmount = 3;
-        private readonly List<KCluster> _kClusters;
+        private List<KCluster>? _kClusters;
 
         public List<Color> ImageColors { get; set; }
         
         public async Task<List<Color>> GetDominantColors()
         {
+            // Обнуление кластеров при начале расчета доминатных цветов
+            _kClusters = new List<KCluster>();
+            
+            // Метод сначала заполняет центры кластеров случайными цветами изображения, затем вызывает перерасчет центров масс кластеров
             await FindClustersCenters();
-
+            
+            // Список доминантых цветов
             var dominantColors = new List<Color>();
             
+            // Добавление в этот список центров масс кластеров, то есть доминатных цветов
             _kClusters.ForEach(cluster => dominantColors.Add(cluster.ClusterCenter));
 
             return dominantColors;
         }
         
         /// <summary>
-        /// Шаблонный метод поиск центров кластеров.
+        /// Шаблонный метод поиска центров кластеров.
         /// </summary>
         /// <returns>Список к-средних кластеров.</returns>
         private async Task FindClustersCenters()
@@ -45,24 +50,36 @@ namespace ColorFinder.Models.KMeans
         /// </summary>
         private void SetupClusters()
         {
+            // Список уже выбранных цветов
             var alreadyPickedColors = new List<Color>();
+            
+            // Класс рандомайзер
             var rnd = new Random();
+            
+            // Итератор
             var i = 0;
+            
+            // Счетчик, проверяющий, состоит ли из одного цвета изображение
             var plainColorInPicture = 0;
             
             while (i < ClustersAmount)
             {
+                // Выбирается случайный номер цвета из списка
                 var randomColorNumber = rnd.Next(ImageColors.Count);
-                var randomColor = ImageColors[randomColorNumber];
                 
+                // Выбирается случайный цвет из списка
+                var randomColor = ImageColors[randomColorNumber];
+
+                // Проверка на то, состоит ли из одного цвета изображение
                 if (alreadyPickedColors.Contains(randomColor) && plainColorInPicture < 3)
                 {
                     plainColorInPicture++;
                     continue;
                 }
-                
+
+                // Добавление в список уже выбранных цветов
                 alreadyPickedColors.Add(randomColor);
-                _kClusters.Add(new KCluster(ImageColors[randomColorNumber]));
+                _kClusters.Add(new KCluster(randomColor));
                 
                 i++;
             }
@@ -73,14 +90,18 @@ namespace ColorFinder.Models.KMeans
         /// </summary>
         private async Task DoCentersRecalclulations()
         {
+            // Итератор
             var iterations = 0;
 
             await Task.Run(() =>
             {
-                while (iterations < 25)
+                // Повторять 5 раз для достижения точности
+                while (iterations < 5)
                 { 
+                    // Заполнение кластеров цветами
                     FillClustersByColors();
-
+                    
+                    // Проверка каждого кластера, нужно ли дальше совершать пересчет центра
                     foreach (var cluster in _kClusters)
                     {
                         if (cluster.IsItEnoughForRecalcultaions())

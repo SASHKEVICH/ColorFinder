@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Threading.Tasks;
 using ColorFinder.Models.ColorCalculator;
 using ColorFinder.Services;
 
@@ -22,27 +19,26 @@ namespace ColorFinder.ViewModels.Commands
 
         public async void Execute()
         {
+            // Переменная, хранящая в себе путь до изображения
             string? imageFilePath;
             try
             {
-                imageFilePath = _imageUploader.GetImageFilePath();
+                // Получение этого пути
+                imageFilePath = _imageUploader.GetImageFilePath(); 
             }
             catch (ArgumentNullException)
             {
                 return;
             }
-
-            var dominantColors = await FindDominantColors(imageFilePath);
-
-            _viewModel.FillDominantColors(dominantColors);
-            _viewModel.SetImageInWindow(imageFilePath);
-        }
-
-        private async Task<List<Color>> FindDominantColors(string imageFilePath)
-        {
+            
+            // Получение списка доминантных цветов
             var dominantColors = await _colorCalculator.GetDominantColors(imageFilePath);
-
-            return dominantColors;
+            
+            // Заполнение объектов интерфейса доминантными цветами
+            _viewModel.FillDominantColors(dominantColors);
+            
+            // Отображение оригинального изображения на экране
+            _viewModel.MainImagePath = imageFilePath;
         }
     }
 }

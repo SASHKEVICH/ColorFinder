@@ -26,17 +26,22 @@ namespace ColorFinder.Models.ColorCalculator
         /// <returns>Список цветов (Colors).</returns>
         public async Task<List<Color>> GetDominantColors(string? imageFileName)
         { 
+            // Проверка на пустой путь до изображения
             if (imageFileName is "" or null)
             {
                 throw new ArgumentNullException(imageFileName);
             }
             
+            // Уменьшение разрешения изображения
             _resizedImage = ImageResizer.ResizeImage(imageFileName);
-
+            
+            // Добавление цветов, взятых с каждого пикселя, в список
             var imageColors = AddColorsFromImageToList();
-
+            
+            // Присваивание этого списка цветов методу подсчета
             _colorCalculatorMethod.ImageColors = imageColors;
-
+            
+            // Получение доминатных цветов
             _dominantColors = await _colorCalculatorMethod.GetDominantColors();
             
             return _dominantColors;

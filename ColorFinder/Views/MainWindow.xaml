@@ -230,19 +230,11 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Window}">
-                        <Border Padding="{Binding OuterMarginSizeThickness, FallbackValue=10}">
+                        <Border>
                             <Grid>
                                 <Border x:Name="Container"
                                         Background="#efefef"
                                         CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}">
-                                </Border>
-                                
-                                <!-- Drop-down shadow effect -->
-                                <Border CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}" 
-                                        Background="{Binding ForegroundLightBrush, FallbackValue=White}">
-                                    <Border.Effect>
-                                        <DropShadowEffect ShadowDepth="15" Opacity="0.1"/>
-                                    </Border.Effect>
                                 </Border>
                                 
                                 <!-- Main-Window Markup -->

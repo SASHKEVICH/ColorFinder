@@ -18,18 +18,26 @@ namespace ColorFinder.ViewModels
         #region Constructor
         public MainWindowViewModel()
         {
-            var calculatorMethod = new KMeansClusterCalculatorMethod();
+            // Определяется метод вычисления доминантных цветов
+            var calculatorMethod = new KMeansClusterCalculatorMethod(); 
+            
+            // Экземпляр класса команды, отвечающей за делегирование логики
             var findDominantColorsCommand = new FindDominantColorsCommand(this, calculatorMethod);
             
+            // Присваивание экземпляра класса команды объекту, реагирующего на нажатие кнопки интерфейса
             FindDominantColorsCommand = new DelegateCommand(findDominantColorsCommand.Execute);
-
+            
+            // Начальное заполнение серым цветом элементов интерфейса, отображающих доминантные цвета
             FillRectanglesByStandardColor();
             
+            // Стартовый выбор цветовой интерпретации кодировки
             _interpretation = ColorInterpretations.First();
-
+            
+            // Начальные значения закругления окна приложения
             _outerMarginSize = 10;
             _windowRadius = 10;
         }
+        
         #endregion
 
         #region Commands
@@ -236,11 +244,7 @@ namespace ColorFinder.ViewModels
             
             SetColorsInTextBlocks();
         }
-        public void SetImageInWindow(string imageFilePath)
-        {
-            MainImagePath = imageFilePath;
-        }
-
+        
         #endregion
     }
 }
